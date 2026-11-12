@@ -1,13 +1,16 @@
-// Unified API base URL helper for desktop (Electron loopback) & web (same-origin / remote host)
+// Unified API base URL helper for desktop (Electron loopback), Tauri native & web (remote host)
 function getApiBaseUrl(port) {
-  if (typeof window !== 'undefined' && window.electronAPI) {
+  if (typeof window !== 'undefined' && window.electronAPI && window.electronAPI.isTauri) {
+    return 'https://app.raserapp.online';
+  }
+  if (typeof window !== 'undefined' && window.electronAPI && !window.electronAPI.isTauri) {
     const p = port || (typeof state !== 'undefined' ? state.serverPort : null);
     if (p) return 'http://127.0.0.1:' + p;
   }
-  if (typeof window !== 'undefined' && window.location && window.location.origin && window.location.origin !== 'null') {
+  if (typeof window !== 'undefined' && window.location && window.location.origin && window.location.origin !== 'null' && !window.location.origin.includes('localhost') && !window.location.origin.includes('tauri')) {
     return window.location.origin;
   }
-  return '';
+  return 'https://app.raserapp.online';
 }
 
 (function initRiffDiskStorageDaemon() {
