@@ -20,6 +20,10 @@
     closeWindow: () => invoke('close_window'),
     openExternal: (url) => {
       try {
+        invoke('open_external', { url });
+        return;
+      } catch (_) {}
+      try {
         if (window.__TAURI__ && window.__TAURI__.opener && typeof window.__TAURI__.opener.openUrl === 'function') {
           return window.__TAURI__.opener.openUrl(url);
         }
