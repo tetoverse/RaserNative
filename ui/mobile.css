@@ -1,0 +1,1575 @@
+/* ==========================================================================
+   Raser Mobile Stylesheet (Apple Music iOS / iPadOS Interface)
+   Pixel-accurate touch ergonomics, typography, frosted glass & gestures
+   ========================================================================== */
+
+:root {
+  --tabbar-h: 54px;
+  --mini-h: 58px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Hide mobile-specific elements on desktop */
+@media (min-width: 841px) {
+  #mobile-header,
+  .mobile-header,
+  .sp-section-see-all,
+  #np-like,
+  #np-vinyl-btn,
+  .sidebar .nav-item .nav-label {
+    display: none !important;
+  }
+}
+
+@media (max-width: 840px) {
+
+  /* ------------------------------------------------------------------------
+     1. GLOBAL VIEWPORT & RESET
+     ------------------------------------------------------------------------ */
+  html, body {
+    width: 100% !important;
+    max-width: 100vw !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    inset: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    -webkit-text-size-adjust: 100% !important;
+    -webkit-tap-highlight-color: transparent !important;
+    background: var(--md-sys-color-surface, #0c0d12) !important;
+    color: var(--md-sys-color-on-surface, #e6e1e5) !important;
+    font-family: "Google Sans", "Google Sans Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     2. APP LAYOUT & MAIN CONTENT
+     ------------------------------------------------------------------------ */
+  body:not(.classic-sidebar):not(.mini) .app-layout,
+  body.hide-titlebar:not(.classic-sidebar):not(.mini) .app-layout,
+  body.mini .app-layout,
+  .app-layout {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  body:not(.classic-sidebar):not(.mini) .main-content,
+  body.mini .main-content,
+  #main-content,
+  .main-content {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    border-radius: 0 !important;
+    padding: 4px 16px calc(var(--tabbar-h) + var(--mini-h) + var(--safe-bottom) + 36px) 16px !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: contain !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     3. HEADER: RASER MATERIAL YOU BRAND + AVATAR + SEARCH
+     ------------------------------------------------------------------------ */
+  /* Hide desktop titlebars & navigation */
+  .titlebar,
+  #titlebar,
+  .top-nav {
+    display: none !important;
+  }
+
+  /* Raser Material You Mobile Header */
+  .mobile-header,
+  #mobile-header {
+    display: block !important;
+    width: 100% !important;
+    padding: calc(var(--safe-top) + 12px) 16px 10px 16px !important;
+    box-sizing: border-box !important;
+    background: transparent !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+
+  .mobile-header-top {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  .mobile-brand-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .mobile-brand-logo {
+    width: 28px !important;
+    height: 28px !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--md-sys-color-primary, #F48FB1) 45%, transparent)) !important;
+    display: block;
+  }
+
+  .mobile-page-title {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.4px !important;
+    color: #ffffff !important;
+    line-height: 1.15 !important;
+  }
+
+  .mobile-header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .mobile-avatar-btn {
+    height: 38px !important;
+    padding: 0 10px 0 4px !important;
+    background: var(--md-sys-color-surface-container, rgba(255, 255, 255, 0.08)) !important;
+    border: 1px solid var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.12)) !important;
+    border-radius: 9999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    transition: transform 0.14s ease, background 0.14s ease !important;
+  }
+  .mobile-avatar-btn:active {
+    transform: scale(0.95) !important;
+  }
+
+  .mobile-avatar-circle {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: var(--md-sys-color-surface-container-highest, rgba(255, 255, 255, 0.12)) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--md-sys-color-primary, #F48FB1) !important;
+    overflow: hidden !important;
+    border: none !important;
+  }
+
+  .mobile-avatar-circle svg {
+    width: 16px !important;
+    height: 16px !important;
+    stroke: currentColor !important;
+  }
+
+  .mobile-avatar-circle img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .mobile-sync-dot {
+    width: 7px !important;
+    height: 7px !important;
+    border-radius: 50% !important;
+    background: var(--md-sys-color-outline, rgba(255, 255, 255, 0.4)) !important;
+    transition: all 0.3s ease !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mobile-sync-dot.synced {
+    background: var(--md-sys-color-primary, #F48FB1) !important;
+    box-shadow: 0 0 6px color-mix(in srgb, var(--md-sys-color-primary, #F48FB1) 60%, transparent) !important;
+  }
+
+  /* Raser Material 3 Search Pill */
+  .mobile-search-row {
+    width: 100% !important;
+  }
+
+  .mobile-search-box {
+    width: 100% !important;
+    height: 40px !important;
+    border-radius: 20px !important;
+    background: var(--md-sys-color-surface-container-high, rgba(255, 255, 255, 0.08)) !important;
+    border: 1px solid var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.08)) !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 14px !important;
+    gap: 10px !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  .mobile-search-box:focus-within {
+    border-color: var(--md-sys-color-primary, #F48FB1) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--md-sys-color-primary, #F48FB1) 25%, transparent) !important;
+  }
+
+  .mobile-search-icon {
+    width: 16px !important;
+    height: 16px !important;
+    stroke: var(--md-sys-color-outline, rgba(255, 255, 255, 0.5)) !important;
+    flex-shrink: 0 !important;
+  }
+
+  #mobile-search-input {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    font-size: 14px !important;
+    color: var(--md-sys-color-on-surface, #ffffff) !important;
+    font-family: inherit !important;
+  }
+
+  #mobile-search-input::placeholder {
+    color: var(--md-sys-color-outline, rgba(255, 255, 255, 0.45)) !important;
+  }
+
+  .mobile-search-clear {
+    background: transparent !important;
+    border: none !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    padding: 4px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .mobile-search-clear.hidden {
+    display: none !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     4. APPLE MUSIC STYLE BOTTOM TAB BAR (Docked fixed bottom with text labels)
+     ------------------------------------------------------------------------ */
+  body:not(.classic-sidebar):not(.mini) .sidebar,
+  body.mini .sidebar,
+  aside.sidebar,
+  #sidebar,
+  .sidebar {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: calc(var(--tabbar-h) + var(--safe-bottom)) !important;
+    min-height: calc(var(--tabbar-h) + var(--safe-bottom)) !important;
+    max-height: calc(var(--tabbar-h) + var(--safe-bottom)) !important;
+    margin: 0 !important;
+    padding: 0 0 var(--safe-bottom) 0 !important;
+    border-radius: 0 !important;
+    border-top: 0.5px solid rgba(255, 255, 255, 0.12) !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    background: rgba(18, 18, 22, 0.88) !important;
+    backdrop-filter: blur(28px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    gap: 0 !important;
+    z-index: 3200 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    display: flex !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  body:not(.classic-sidebar):not(.mini) .sidebar:not(.has-drawer-open)::before,
+  body:not(.classic-sidebar):not(.mini) .sidebar:not(.has-drawer-open)::after,
+  body:not(.classic-sidebar):not(.mini) .sidebar::before,
+  body:not(.classic-sidebar):not(.mini) .sidebar::after,
+  aside.sidebar::before,
+  aside.sidebar::after,
+  .sidebar::before,
+  .sidebar::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  .sidebar-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    flex: 1 1 auto !important;
+    position: static !important;
+  }
+
+  /* Unused sidebar desktop items */
+  .nav-active-indicator,
+  .rail-divider,
+  #rail-playlists-scroll,
+  .rail-playlists-scroll,
+  .rail-drawer,
+  #rail-drawer,
+  .sidebar-bottom-spacer,
+  .rail-action-group,
+  #btn-toggle-presets-drawer,
+  #btn-rail-new-playlist,
+  #nav-history {
+    display: none !important;
+  }
+
+  /* Kill desktop inset: -10px pseudo-element on mobile */
+  .sidebar .nav-item::after,
+  .sidebar .nav-item::before {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* The 5 Clean Tabs: Listen Now, Favorites, Albums, Queue, Settings */
+  .sidebar #nav-discover,
+  .sidebar #nav-favorites,
+  .sidebar #nav-albums,
+  .sidebar #nav-queue,
+  .sidebar #nav-settings,
+  body.hide-albums-tab #nav-albums,
+  .sidebar .nav-item {
+    flex: 1 1 20% !important;
+    width: 20% !important;
+    max-width: 20% !important;
+    height: var(--tabbar-h) !important;
+    margin: 0 !important;
+    padding: 4px 0 2px 0 !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: transform 0.12s ease !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .sidebar .nav-item:active {
+    transform: scale(0.92) !important;
+  }
+
+  /* Material 3 Tab Indicator Pills */
+  .sidebar .nav-item .nav-indicator,
+  #nav-discover .nav-indicator {
+    width: 54px !important;
+    height: 30px !important;
+    border-radius: 16px !important;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.22s cubic-bezier(0.2, 0, 0, 1), transform 0.15s ease !important;
+    margin: 0 auto !important;
+  }
+  .sidebar .nav-item.active .nav-indicator,
+  #nav-discover.active .nav-indicator {
+    background: color-mix(in srgb, var(--md-sys-color-primary, #F48FB1) 22%, transparent) !important;
+  }
+
+  .sidebar .nav-item svg {
+    width: 22px !important;
+    height: 22px !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+    stroke: currentColor !important;
+    fill: none !important;
+    transition: color 0.2s ease, stroke 0.2s ease !important;
+  }
+  .sidebar .nav-item.active svg,
+  .sidebar .nav-item.active .nav-indicator svg {
+    color: var(--md-sys-color-primary, #F48FB1) !important;
+    stroke: var(--md-sys-color-primary, #F48FB1) !important;
+    fill: none !important;
+  }
+  .sidebar .nav-item.active svg path,
+  .sidebar .nav-item.active svg circle,
+  .sidebar .nav-item.active svg polygon,
+  .sidebar .nav-item.active svg line {
+    stroke: var(--md-sys-color-primary, #F48FB1) !important;
+  }
+
+  /* Tab item text labels via .nav-label span */
+  .sidebar .nav-item .nav-label {
+    display: block !important;
+    font-size: 10.5px !important;
+    font-weight: 500 !important;
+    margin-top: 2px !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+    letter-spacing: -0.15px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+    pointer-events: none !important;
+    transition: color 0.2s ease !important;
+  }
+  .sidebar .nav-item.active .nav-label {
+    color: var(--md-sys-color-primary, #F48FB1) !important;
+    font-weight: 700 !important;
+  }
+
+  /* Raser Home Tab Icon */
+  .nav-home-icon-svg {
+    display: none !important;
+  }
+  .nav-home-app-icon,
+  #nav-home-app-icon {
+    display: block !important;
+    width: 20px !important;
+    height: 20px !important;
+    object-fit: contain !important;
+    opacity: 0.45 !important;
+    transition: opacity 0.2s ease, filter 0.2s ease !important;
+  }
+  .sidebar #nav-discover.active .nav-home-app-icon,
+  .sidebar #nav-discover.active #nav-home-app-icon {
+    opacity: 1 !important;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--md-sys-color-primary, #F48FB1) 80%, transparent)) !important;
+  }
+
+  .sidebar .nav-badge {
+    position: absolute !important;
+    top: 2px !important;
+    right: calc(50% - 18px) !important;
+    font-size: 9px !important;
+    min-width: 14px !important;
+    height: 14px !important;
+    line-height: 14px !important;
+    padding: 0 4px !important;
+    border-radius: 7px !important;
+    background: var(--md-sys-color-primary, #F48FB1) !important;
+    color: #0c0d12 !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     5. APPLE MUSIC FLOATING MINI PLAYER (~8px Above Bottom Tab Bar)
+     ------------------------------------------------------------------------ */
+  html.is-mobile body:not(.np-open) #playbar,
+  body:not(.classic-sidebar):not(.mini):not(.np-open) #playbar,
+  body:not(.np-open) #playbar {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 8px) !important;
+    top: auto !important;
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    height: var(--mini-h) !important;
+    min-height: var(--mini-h) !important;
+    max-height: var(--mini-h) !important;
+    padding: 0 12px 0 8px !important;
+    border-radius: 14px !important;
+    background: rgba(28, 28, 34, 0.92) !important;
+    backdrop-filter: blur(30px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(190%) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 0 0.5px rgba(255, 255, 255, 0.12) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    z-index: 3150 !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+    overflow: hidden !important;
+  }
+
+  body:not(.np-open) #playbar .playbar-left,
+  .playbar:not(.np-open) .playbar-left {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: auto !important;
+  }
+
+  /* Raser Morphing Squircle Artwork / Mini Player Artwork */
+  body:not(.np-open) #playbar-artwork-wrapper {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    margin: 0 !important;
+    position: relative !important;
+    overflow: visible !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  body:not(.np-open) #m3c-wrap {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    position: relative !important;
+    overflow: visible !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* When M3 Morphing Cover is Active */
+  body.m3-cover-on:not(.np-open) #m3c-wrap > img,
+  body.m3-cover-on:not(.np-open) #playbar-artwork,
+  body.m3-cover-on:not(.np-open) #playbar-cover {
+    visibility: hidden !important;
+  }
+
+  body.m3-cover-on:not(.np-open) #m3c-canvas {
+    display: block !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 66px !important;
+    height: 66px !important;
+    max-width: none !important;
+    max-height: none !important;
+    pointer-events: none !important;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45)) !important;
+  }
+
+  /* Fallback when M3 cover is inactive */
+  body:not(.m3-cover-on):not(.np-open) #m3c-wrap {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  body:not(.m3-cover-on):not(.np-open) #playbar-artwork,
+  body:not(.m3-cover-on):not(.np-open) #playbar-cover {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 12px !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Song Title & Artist text */
+  body:not(.np-open) .playbar-left .track-meta {
+    max-width: none !important;
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 2px !important;
+  }
+  body:not(.np-open) .playbar-left .track-meta .track-title,
+  body:not(.np-open) #playbar-title {
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    letter-spacing: -0.2px !important;
+    line-height: 1.2 !important;
+  }
+  body:not(.np-open) .playbar-left .track-meta .track-artist,
+  body:not(.np-open) #playbar-artist {
+    font-size: 12.5px !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.2 !important;
+  }
+
+  #playbar .track-meta,
+  #playbar .track-title,
+  #playbar .track-artist,
+  #playbar .artist-link-part,
+  #playbar .artist-sep {
+    pointer-events: none !important;
+  }
+
+  /* Right Side: Play/Pause and Next ONLY (No Scrubber, No Clutter) */
+  body:not(.np-open) .playbar-left > .btn-icon-pill,
+  body:not(.np-open) .playbar-right,
+  body:not(.np-open) #btn-prev,
+  body:not(.np-open) #btn-shuffle,
+  body:not(.np-open) #btn-repeat,
+  body:not(.np-open) .scrubber-bar-wrapper,
+  body:not(.np-open) .playbar-bg-visualizer {
+    display: none !important;
+  }
+
+  body:not(.np-open) .playbar-center {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  body:not(.np-open) .playback-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin: 0 !important;
+  }
+
+  body:not(.np-open) #btn-play-pause {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: var(--md-sys-color-primary, #F48FB1) !important;
+    color: var(--md-sys-color-on-primary, #0c0d12) !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 3px 10px color-mix(in srgb, var(--md-sys-color-primary, #F48FB1) 35%, transparent) !important;
+    cursor: pointer !important;
+    transition: transform 0.15s ease, background-color 0.15s ease !important;
+    flex-shrink: 0 !important;
+  }
+  body:not(.np-open) #btn-play-pause:active {
+    transform: scale(0.92) !important;
+  }
+  body:not(.np-open) #btn-play-pause svg {
+    width: 18px !important;
+    height: 18px !important;
+    fill: currentColor !important;
+    stroke: none !important;
+    color: var(--md-sys-color-on-primary, #0c0d12) !important;
+  }
+
+  body:not(.np-open) #btn-next {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: var(--md-sys-color-surface-container-high, rgba(255, 255, 255, 0.08)) !important;
+    border: none !important;
+    color: var(--md-sys-color-on-surface, #ffffff) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    transition: transform 0.15s ease !important;
+    flex-shrink: 0 !important;
+  }
+  body:not(.np-open) #btn-next:active {
+    transform: scale(0.92) !important;
+  }
+  body:not(.np-open) #btn-next svg {
+    width: 18px !important;
+    height: 18px !important;
+    fill: currentColor !important;
+    stroke: none !important;
+  }
+
+  /* Thin Accent Progress Line at bottom of mini player */
+  body:not(.np-open) #playbar::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    height: 2.5px !important;
+    width: calc(var(--mini-progress, 0) * 100%) !important;
+    background: var(--md-sys-color-primary, #F48FB1) !important;
+    border-radius: 0 0 14px 14px !important;
+    transition: width 0.1s linear !important;
+    pointer-events: none !important;
+  }
+
+  /* Dynamic Ambient Background Glow */
+  #view-discover .home-ambient {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+  }
+  #view-discover .home-ambient-layer {
+    position: fixed !important;
+    inset: -20% !important;
+    filter: blur(80px) saturate(1.8) !important;
+    opacity: 0 !important;
+    transition: opacity 700ms ease !important;
+    pointer-events: none !important;
+  }
+  #view-discover .home-ambient-layer.on {
+    opacity: 0.85 !important;
+  }
+
+  /* Cover background dynamic aura */
+  #cover-bg {
+    display: none !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+  }
+  body.cover-bg-on #cover-bg {
+    display: block !important;
+  }
+  .cover-bg-layer {
+    position: absolute !important;
+    inset: -20% !important;
+    filter: blur(85px) saturate(1.5) !important;
+    opacity: 0 !important;
+    transition: opacity 600ms ease !important;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+  .cover-bg-layer.on {
+    opacity: var(--cover-bg-brightness, 0.45) !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     6. FULL-SCREEN NOW PLAYING SHEET (Material You Frosted Ambient Sheet)
+     ------------------------------------------------------------------------ */
+  #right-panel,
+  body.np-open #right-panel {
+    position: fixed !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    padding: calc(var(--safe-top) + 12px) 20px calc(var(--safe-bottom) + 200px) 20px !important;
+    z-index: 3400 !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+    background: #0c0d12 !important;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  body.np-open #mobile-header {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Ambient Track Banner in Now Playing Sheet */
+  .right-panel-banner {
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+    opacity: 0.75 !important;
+    overflow: hidden !important;
+  }
+  .right-panel-banner .banner-image {
+    position: absolute !important;
+    inset: -25% !important;
+    width: 150% !important;
+    height: 150% !important;
+    background-size: cover !important;
+    background-position: center !important;
+    filter: blur(75px) saturate(200%) brightness(0.85) !important;
+    opacity: 0.8 !important;
+  }
+
+  /* Closed sheet */
+  #right-panel.hidden,
+  body:not(.np-open) #right-panel,
+  body:not(.np-open) .right-panel {
+    transform: translateY(100%) !important;
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Top Drag Pill Handle Indicator */
+  #right-panel::before {
+    content: '' !important;
+    width: 40px !important;
+    height: 5px !important;
+    border-radius: 3px !important;
+    background: rgba(255, 255, 255, 0.32) !important;
+    margin: 0 auto 16px auto !important;
+    display: block !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+  }
+
+  /* Hide desktop header buttons in Now Playing sheet */
+  .right-panel-header,
+  .right-panel-header-actions,
+  #right-panel .titlebar-controls,
+  #btn-close-right-panel,
+  #btn-lyrics-mode,
+  .panel-resize-edge,
+  .lyrics-header,
+  .lyrics-header-actions,
+  .lyrics-action-btn,
+  #btn-add-custom-lyrics,
+  #btn-sync-lyrics,
+  #btn-translate-lyrics,
+  #btn-tv-karaoke {
+    display: none !important;
+  }
+
+  /* Large Center Artwork Box */
+  .right-panel-artwork-box {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    flex-shrink: 0 !important;
+    margin: 4px 0 10px 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  #cover-container {
+    width: min(56vw, 230px) !important;
+    height: min(56vw, 230px) !important;
+    margin-bottom: 12px !important;
+    position: relative !important;
+    touch-action: pan-y !important;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.3s ease !important;
+  }
+
+  /* When M3 Morphing Squircle Shape is active */
+  body.m3-hero-covers-on #cover-container:not(.vinyl-mode) {
+    overflow: visible !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 28px color-mix(in srgb, var(--md-sys-color-primary, #F48FB1) 24%, transparent)) !important;
+  }
+  body.m3-hero-covers-on #cover-container:not(.vinyl-mode) #right-panel-cover,
+  body.m3-hero-covers-on #cover-container:not(.vinyl-mode) #right-panel-fallback {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    clip-path: url(#m3-hero-shape) !important;
+    border-radius: 0 !important;
+  }
+
+  /* Fallback standard rounded cover */
+  body:not(.m3-hero-covers-on) #cover-container:not(.vinyl-mode) {
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+  }
+  body:not(.m3-hero-covers-on) #cover-container:not(.vinyl-mode) #right-panel-cover,
+  body:not(.m3-hero-covers-on) #cover-container:not(.vinyl-mode) #right-panel-fallback {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 24px !important;
+    clip-path: none !important;
+  }
+
+  /* Vinyl Record Mode */
+  #cover-container.vinyl-mode {
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.75), 0 0 30px rgba(0, 0, 0, 0.5) !important;
+    filter: none !important;
+  }
+  #cover-container.vinyl-mode #right-panel-cover,
+  #cover-container.vinyl-mode #right-panel-fallback {
+    clip-path: none !important;
+    border-radius: 50% !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  #cover-container.vinyl-mode.spinning {
+    animation: vinylSpin 3s linear infinite !important;
+  }
+
+  /* Animated Vinyl Grooves & Glossy Reflection Overlay */
+  #vinyl-overlay,
+  .vinyl-overlay {
+    display: none;
+  }
+  #cover-container.vinyl-mode #vinyl-overlay,
+  #cover-container.vinyl-mode .vinyl-overlay {
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 50% !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    background:
+      radial-gradient(circle at center, #111116 0%, #111116 8%, transparent 8.5%),
+      repeating-radial-gradient(circle at center, transparent 0, transparent 2px, rgba(0,0,0,0.3) 2.5px, transparent 3.5px),
+      conic-gradient(from 45deg, rgba(255,255,255,0.14) 0deg, transparent 40deg, rgba(255,255,255,0.07) 90deg, transparent 130deg, rgba(255,255,255,0.14) 180deg, transparent 220deg, rgba(255,255,255,0.07) 270deg, transparent 310deg, rgba(255,255,255,0.14) 360deg) !important;
+    box-shadow: inset 0 0 0 4px rgba(0,0,0,0.85), inset 0 0 0 7px rgba(255,255,255,0.15), inset 0 0 28px rgba(0,0,0,0.7) !important;
+  }
+
+  #btn-right-panel-art {
+    display: none !important;
+  }
+
+  /* Song Title & Actions with Vinyl Toggle + Like */
+  .right-panel-meta {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 0 4px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .right-panel-title-row {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+  }
+
+  .right-panel-title {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+  }
+
+  .right-panel-artist {
+    font-size: 16px !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin-top: 4px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .np-title-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-shrink: 0 !important;
+  }
+
+  #np-vinyl-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+  }
+  #np-vinyl-btn.active {
+    background: var(--md-sys-color-primary, #F48FB1) !important;
+    border-color: var(--md-sys-color-primary, #F48FB1) !important;
+    color: #0c0d12 !important;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--md-sys-color-primary, #F48FB1) 50%, transparent) !important;
+  }
+
+  #np-like {
+    background: transparent !important;
+    border: none !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    cursor: pointer !important;
+    padding: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.15s ease !important;
+  }
+  #np-like.on {
+    color: var(--md-sys-color-primary, #F48FB1) !important;
+  }
+  #np-like svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  /* Lyrics section inside sheet */
+  .lyrics-section {
+    flex: 1 1 auto !important;
+    min-height: 180px !important;
+    margin-top: 10px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 24px !important;
+    z-index: 2 !important;
+    position: relative !important;
+    text-align: center !important;
+  }
+  .lyrics-container {
+    padding: 10px 0 20px 0 !important;
+  }
+  .lyric-line {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: rgba(255, 255, 255, 0.35) !important;
+    padding: 8px 0 !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+  }
+  .lyric-line.active {
+    color: #ffffff !important;
+    transform: scale(1.04) !important;
+  }
+
+  /* NOW PLAYING CONTROLS AT SHEET BOTTOM */
+  html.is-mobile body.np-open #playbar,
+  body.np-open #playbar {
+    z-index: 3500 !important;
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    padding: 12px 24px calc(var(--safe-bottom) + 16px) 24px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    background: linear-gradient(180deg, transparent 0%, rgba(12, 13, 18, 0.96) 24%, #0c0d12 100%) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: none !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+  }
+
+  body.np-open #playbar::after,
+  body.np-open #playbar .playbar-left {
+    display: none !important;
+  }
+
+  body.np-open #playbar .playbar-center {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column-reverse !important;
+    gap: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.np-open .scrubber-bar-wrapper {
+    display: flex !important;
+    width: 100% !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    margin-bottom: 8px !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+  body.np-open .time-label,
+  body.np-open #time-current,
+  body.np-open #time-duration {
+    opacity: 1 !important;
+    display: block !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-variant-numeric: tabular-nums !important;
+    flex-shrink: 0 !important;
+    min-width: 38px !important;
+    pointer-events: auto !important;
+  }
+  body.np-open #time-current {
+    text-align: left !important;
+  }
+  body.np-open #time-duration {
+    text-align: right !important;
+  }
+  body.np-open .scrubber-track-container,
+  body.np-open .scrubber-track {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    height: 32px !important;
+    position: relative !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    touch-action: none !important;
+  }
+  body.np-open .squiggly-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    inset: 0 !important;
+  }
+
+  body.np-open .playback-controls {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    width: 100% !important;
+  }
+
+  body.np-open #btn-shuffle,
+  body.np-open #btn-repeat,
+  body.np-open #btn-prev,
+  body.np-open #btn-next {
+    display: flex !important;
+    width: 44px !important;
+    height: 44px !important;
+    color: #ffffff !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  body.np-open #btn-prev svg,
+  body.np-open #btn-next svg {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  /* Apple Music Big Round Play Button */
+  body.np-open #btn-play-pause {
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px !important;
+    min-height: 64px !important;
+    background: var(--md-sys-color-primary, #F48FB1) !important;
+    color: #0c0d12 !important;
+    border-radius: 50% !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  body.np-open #btn-play-pause svg {
+    width: 34px !important;
+    height: 34px !important;
+    fill: currentColor !important;
+  }
+
+  body.np-open .playbar-right,
+  body.np-open .volume-control-group,
+  body.np-open #volume-slider {
+    display: none !important;
+  }
+
+  body.np-open .sidebar {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     7. CONTENT SECTIONS: HORIZONTAL SWIPEABLE CARDS (Raser Material You)
+     ------------------------------------------------------------------------ */
+  .home-hero,
+  #home-hero,
+  .home-hero-dots,
+  #sp-home::before {
+    display: none !important;
+  }
+
+  .sp-section h2 {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.3px !important;
+    margin: 20px 0 10px 0 !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+  .sp-section h2 svg.sp-ico {
+    display: inline-block !important;
+    vertical-align: middle !important;
+    width: 20px !important;
+    height: 20px !important;
+    color: var(--md-sys-color-primary, #F48FB1) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .sp-section-see-all {
+    display: none !important;
+  }
+
+  /* Horizontal swipeable carousel with mandatory snap */
+  .sp-row,
+  #sp-made,
+  #sp-trend,
+  #sp-artists,
+  #sp-quick {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 14px !important;
+    padding: 4px 16px 14px 16px !important;
+    margin: 0 -16px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .sp-row::-webkit-scrollbar,
+  #sp-quick::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Apple Music Top Picks & Daily Mix Cards */
+  .sp-card,
+  #sp-made .sp-card {
+    flex: 0 0 min(68vw, 240px) !important;
+    width: min(68vw, 240px) !important;
+    max-width: min(68vw, 240px) !important;
+    scroll-snap-align: start !important;
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .sp-card .sp-card-cover {
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 12px 12px 0 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+  }
+  .sp-card .sp-card-cover img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .sp-card .sp-card-title {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    padding: 10px 12px 2px 12px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .sp-card .sp-card-sub {
+    font-size: 13px !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+    padding: 0 12px 12px 12px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Spotify promo card */
+  .spotify-promo {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, rgba(29, 185, 84, 0.22) 0%, rgba(18, 18, 24, 0.9) 100%) !important;
+    border: 1px solid rgba(29, 185, 84, 0.35) !important;
+    box-sizing: border-box !important;
+    margin: 0 0 20px 0 !important;
+    width: 100% !important;
+  }
+  .spotify-promo-art {
+    height: 42px !important;
+    width: auto !important;
+  }
+  .spotify-promo-text {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+  }
+  .spotify-promo-title {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    line-height: 1.25 !important;
+  }
+  .spotify-promo-sub {
+    font-size: 13px !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+  }
+  .spotify-promo-btn {
+    align-self: flex-start !important;
+    margin-top: 4px !important;
+    background: var(--md-sys-color-primary, #F48FB1) !important;
+    color: #0c0d12 !important;
+    font-weight: 600 !important;
+    padding: 8px 20px !important;
+    border-radius: 20px !important;
+  }
+  .spotify-promo-close {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+  }
+
+  /* Search Results & Track Lists */
+  #search-results-container {
+    padding-bottom: calc(var(--tabbar-h) + var(--mini-h) + var(--safe-bottom) + 32px) !important;
+  }
+  .search-filter-chips {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 8px !important;
+    padding: 10px 0 !important;
+    scrollbar-width: none !important;
+    margin: 0 -16px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .search-filter-chips::-webkit-scrollbar {
+    display: none !important;
+  }
+  .search-chip {
+    padding: 6px 14px !important;
+    border-radius: 16px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    border: none !important;
+    flex-shrink: 0 !important;
+  }
+  .search-chip.active {
+    background: var(--md-sys-color-primary, #F48FB1) !important;
+    color: #0c0d12 !important;
+  }
+
+  /* Track Row Touch ergonomics */
+  .tracks-list,
+  #search-tracks-list,
+  #favorites-tracks-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    width: 100% !important;
+  }
+  .track-row {
+    height: 56px !important;
+    padding: 6px 8px !important;
+    border-radius: 10px !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+  .track-thumb-box,
+  .track-thumb {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Settings View Mobile Responsiveness */
+  #view-settings .settings-view {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  #view-settings .section-title {
+    display: none !important;
+  }
+  #view-settings .settings-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+  #view-settings .settings-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  #view-settings .settings-search-box {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 48px !important;
+    margin: 0 !important;
+    padding: 0 16px !important;
+    border-radius: 24px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-sizing: border-box !important;
+  }
+  #view-settings .settings-search-icon {
+    width: 18px !important;
+    height: 18px !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    flex-shrink: 0 !important;
+    margin-right: 10px !important;
+  }
+  #view-settings #settings-search-input {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    color: #fff !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    padding: 0 !important;
+    pointer-events: auto !important;
+  }
+  #view-settings .settings-nav-chips {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 8px !important;
+    padding: 2px 2px 8px 2px !important;
+    scrollbar-width: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #view-settings .settings-nav-chips::-webkit-scrollbar {
+    display: none !important;
+  }
+  #view-settings .settings-nav-btn {
+    flex: 0 0 auto !important;
+    height: 38px !important;
+    padding: 0 16px !important;
+    border-radius: 999px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+  }
+  #view-settings .settings-nav-btn span {
+    display: inline !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+  }
+  #view-settings .settings-nav-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0 !important;
+  }
+  #view-settings .settings-nav-btn.active {
+    background: var(--md-sys-color-primary, #a8c7fa) !important;
+    color: var(--md-sys-color-on-primary, #04316a) !important;
+    border-color: transparent !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 10px color-mix(in srgb, var(--md-sys-color-primary, #a8c7fa) 40%, transparent) !important;
+  }
+  #view-settings .settings-nav-btn.active svg {
+    color: var(--md-sys-color-on-primary, #04316a) !important;
+  }
+  #view-settings .settings-pane {
+    width: 100% !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+  }
+  #view-settings .m3-group {
+    margin-bottom: 14px !important;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 4px !important;
+    gap: 2px !important;
+  }
+  #view-settings .setting-item {
+    padding: 14px 16px !important;
+    border-radius: 16px !important;
+  }
+  #view-settings .setting-item-top {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+  #view-settings .setting-name {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+  }
+  #view-settings .setting-hint {
+    font-size: 12px !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin-top: 4px !important;
+  }
+
+}
