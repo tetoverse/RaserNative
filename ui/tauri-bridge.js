@@ -90,11 +90,60 @@
       return tracks || [];
     },
     rescanLocalMetadata: async () => [],
+    storageInitSync: () => {
+      if (window.__RASER_INITIAL_STORAGE__ && typeof window.__RASER_INITIAL_STORAGE__ === 'object') {
+        return window.__RASER_INITIAL_STORAGE__;
+      }
+      const out = {};
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k) out[k] = localStorage.getItem(k);
+        }
+      } catch (_) {}
+      return out;
+    },
+    storageSaveSync: (data) => {
+      invoke('save_disk_storage', { data });
+    },
+    storageSaveBatch: (data) => {
+      invoke('save_disk_storage', { data });
+    },
     updateTaskbarState: (playing) => invoke('taskbar_playback_state', { playing: !!playing }),
     setThumbarButtons: () => {},
     getCacheSize: async () => 0,
     clearCache: async () => {}
   });
+
+  // Restore playlists, favorites, and history from disk storage into active runtime
+  const applyDiskStorage = (data) => {
+    if (!data || typeof data !== 'object') return;
+    let changed = false;
+    for (const [k, v] of Object.entries(data)) {
+      try {
+        const valStr = typeof v === 'string' ? v : JSON.stringify(v);
+        const existing = localStorage.getItem(k);
+        if (!existing || (k === 'devsize_playlists' && (existing === '[]' || existing.length < 5))) {
+          localStorage.setItem(k, valStr);
+          changed = true;
+        }
+      } catch (_) {}
+    }
+    if (changed) {
+      try { window.dispatchEvent(new CustomEvent('raser:cloud-library-updated')); } catch (_) {}
+      try { window.dispatchEvent(new CustomEvent('raser:playlist-changed')); } catch (_) {}
+    }
+  };
+
+  if (window.__RASER_INITIAL_STORAGE__) {
+    applyDiskStorage(window.__RASER_INITIAL_STORAGE__);
+  }
+  invoke('get_disk_storage').then(data => {
+    if (data) {
+      window.__RASER_INITIAL_STORAGE__ = data;
+      applyDiskStorage(data);
+    }
+  }).catch(() => {});
 
   // Automatically sync playback state with Windows Taskbar Thumbnail Toolbar (Play/Pause button icon)
   document.addEventListener('DOMContentLoaded', () => {

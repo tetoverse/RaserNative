@@ -1,5 +1,6 @@
 mod discord;
 mod local_files;
+mod storage;
 mod taskbar;
 mod updater;
 
@@ -91,6 +92,28 @@ fn taskbar_playback_state(playing: bool) {
     taskbar::win::update_playback_state(playing, is_tr);
 }
 
+#[tauri::command]
+fn get_disk_storage() -> std::collections::HashMap<String, serde_json::Value> {
+    storage::read_storage_map()
+}
+
+#[tauri::command]
+fn save_disk_storage(data: std::collections::HashMap<String, serde_json::Value>) {
+    storage::save_storage_map(data);
+}
+
+#[tauri::command]
+fn trim_working_set() {
+    #[cfg(target_os = "windows")]
+    unsafe {
+        unsafe extern "system" {
+            fn GetCurrentProcess() -> isize;
+            fn SetProcessWorkingSetSize(h_process: isize, min_size: usize, max_size: usize) -> i32;
+        }
+        let _ = SetProcessWorkingSetSize(GetCurrentProcess(), usize::MAX, usize::MAX);
+    }
+}
+
 fn is_tr_locale() -> bool {
     #[cfg(target_os = "windows")]
     unsafe {
@@ -148,7 +171,10 @@ pub fn run() {
             install_update,
             pick_local_files,
             pick_local_folder,
-            taskbar_playback_state
+            taskbar_playback_state,
+            get_disk_storage,
+            save_disk_storage,
+            trim_working_set
         ])
         .setup(|app| {
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaPlayPause));
@@ -226,9 +252,27 @@ pub fn run() {
 
             let _ = tray_builder.build(app)?;
 
+            let initial_storage = storage::read_storage_raw();
             if let Some(window) = app.get_webview_window("main") {
+                let script = format!("window.__RASER_INITIAL_STORAGE__ = {};", initial_storage);
+                let _ = window.eval(&script);
                 let _ = window.show();
             }
+
+            // Periodic working set memory trim to keep background RAM usage minimal (< 150MB)
+            std::thread::spawn(|| {
+                loop {
+                    std::thread::sleep(std::time::Duration::from_secs(30));
+                    #[cfg(target_os = "windows")]
+                    unsafe {
+                        unsafe extern "system" {
+                            fn GetCurrentProcess() -> isize;
+                            fn SetProcessWorkingSetSize(h_process: isize, min_size: usize, max_size: usize) -> i32;
+                        }
+                        let _ = SetProcessWorkingSetSize(GetCurrentProcess(), usize::MAX, usize::MAX);
+                    }
+                }
+            });
             Ok(())
         })
         .run(tauri::generate_context!())

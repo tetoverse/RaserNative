@@ -213,7 +213,7 @@ pub mod win {
         if msg == WM_COMMAND {
             let hi = (w_param >> 16) & 0xFFFF;
             let id = w_param & 0xFFFF;
-            if hi == THBN_CLICKED || id == BTN_PREV || id == BTN_PLAY_PAUSE || id == BTN_NEXT {
+            if hi == THBN_CLICKED && (id == BTN_PREV || id == BTN_PLAY_PAUSE || id == BTN_NEXT) {
                 if let Some(app) = APP_HANDLE.get() {
                     match id {
                         BTN_PREV => {

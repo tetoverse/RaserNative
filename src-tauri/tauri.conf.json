@@ -18,7 +18,7 @@
         "fullscreen": false,
         "decorations": false,
         "transparent": false,
-        "additionalBrowserArgs": "--enable-features=HardwareMediaKeyHandling,MediaSessionService"
+        "additionalBrowserArgs": "--enable-features=HardwareMediaKeyHandling,MediaSessionService --renderer-process-limit=1 --js-flags=--max-old-space-size=96 --disable-gpu-shader-disk-cache --disable-features=AudioServiceOutOfProcess,CalculateNativeWinOcclusion"
       }
     ],
     "security": {
