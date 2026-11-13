@@ -73,6 +73,24 @@ async fn install_update(app: tauri::AppHandle, download_url: String) -> Result<(
     updater::download_and_install_update(app, download_url).await
 }
 
+fn is_tr_locale() -> bool {
+    #[cfg(target_os = "windows")]
+    unsafe {
+        unsafe extern "system" {
+            fn GetUserDefaultUILanguage() -> u16;
+        }
+        if GetUserDefaultUILanguage() == 0x041F {
+            return true;
+        }
+    }
+    if let Ok(lang) = std::env::var("LANG") {
+        if lang.to_lowercase().starts_with("tr") {
+            return true;
+        }
+    }
+    false
+}
+
 fn send_media_command(app: &tauri::AppHandle, cmd: &str) {
     let _ = app.emit("media-command", cmd);
     if let Some(window) = app.get_webview_window("main") {
@@ -118,11 +136,18 @@ pub fn run() {
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaStop));
 
             // Setup System Tray
-            let show_i = MenuItem::with_id(app, "show", "Raser'ı Göster", true, None::<&str>)?;
-            let toggle_i = MenuItem::with_id(app, "toggle_play", "Oynat / Durdur", true, None::<&str>)?;
-            let next_i = MenuItem::with_id(app, "next_track", "Sonraki Şarkı", true, None::<&str>)?;
-            let prev_i = MenuItem::with_id(app, "prev_track", "Önceki Şarkı", true, None::<&str>)?;
-            let quit_i = MenuItem::with_id(app, "quit", "Çıkış", true, None::<&str>)?;
+            let is_tr = is_tr_locale();
+            let show_text = if is_tr { "Raser'ı Göster" } else { "Show Raser" };
+            let toggle_text = if is_tr { "Oynat / Durdur" } else { "Play / Pause" };
+            let next_text = if is_tr { "Sonraki Şarkı" } else { "Next Track" };
+            let prev_text = if is_tr { "Önceki Şarkı" } else { "Previous Track" };
+            let quit_text = if is_tr { "Çıkış" } else { "Quit" };
+
+            let show_i = MenuItem::with_id(app, "show", show_text, true, None::<&str>)?;
+            let toggle_i = MenuItem::with_id(app, "toggle_play", toggle_text, true, None::<&str>)?;
+            let next_i = MenuItem::with_id(app, "next_track", next_text, true, None::<&str>)?;
+            let prev_i = MenuItem::with_id(app, "prev_track", prev_text, true, None::<&str>)?;
+            let quit_i = MenuItem::with_id(app, "quit", quit_text, true, None::<&str>)?;
 
             let tray_menu = Menu::with_items(app, &[
                 &show_i,

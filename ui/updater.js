@@ -1,4 +1,4 @@
-// Raser Native - Mandatory Auto-Updater Client
+// Raser Native - Mandatory Auto-Updater Client (TR / EN i18n support)
 (function initUpdater() {
   const invoke = (cmd, args) => {
     if (window.__TAURI__ && window.__TAURI__.core && typeof window.__TAURI__.core.invoke === 'function') {
@@ -10,9 +10,47 @@
     return Promise.resolve();
   };
 
+  function getLang() {
+    try {
+      const saved = localStorage.getItem('riff_ui_lang') || localStorage.getItem('raser_ui_lang');
+      if (saved) return saved.toLowerCase().startsWith('tr') ? 'tr' : 'en';
+      if (typeof navigator !== 'undefined' && navigator.language && navigator.language.toLowerCase().startsWith('tr')) {
+        return 'tr';
+      }
+      return 'en';
+    } catch (_) {
+      return 'en';
+    }
+  }
+
+  const I18N = {
+    tr: {
+      title: 'Yeni Güncelleme Mevcut!',
+      desc: "Raser'ı kullanmaya devam edebilmek için güncelleme yapılması zorunludur. Güncelleme tamamlanana kadar uygulama kilitlidir.",
+      notesHeader: 'Yenilikler:',
+      defaultNotes: 'Yeni hata düzeltmeleri ve performans geliştirmeleri.',
+      btnUpdate: 'Şimdi Güncelle ve Yeniden Başlat',
+      downloading: 'İndiriliyor...',
+      installing: 'Kuruluyor ve yeniden başlatılıyor...',
+      downloadError: 'İndirme hatası: '
+    },
+    en: {
+      title: 'Update Available!',
+      desc: 'A mandatory update is required to continue using Raser. The application is locked until the update is complete.',
+      notesHeader: "What's New:",
+      defaultNotes: 'Bug fixes and performance improvements.',
+      btnUpdate: 'Update Now & Restart',
+      downloading: 'Downloading...',
+      installing: 'Installing and restarting...',
+      downloadError: 'Download error: '
+    }
+  };
+
   function createUpdateUI(updateInfo) {
-    // If modal already exists, don't duplicate
     if (document.getElementById('raser-mandatory-update-modal')) return;
+
+    const lang = getLang();
+    const t = I18N[lang] || I18N.en;
 
     const modal = document.createElement('div');
     modal.id = 'raser-mandatory-update-modal';
@@ -65,7 +103,7 @@
         </div>
 
         <h2 style="font-size: 22px; font-weight: 700; color: #fff; margin: 0;">
-          Yeni Güncelleme Mevcut!
+          ${t.title}
         </h2>
 
         <div style="
@@ -91,7 +129,7 @@
           line-height: 1.5;
           margin: 0;
         ">
-          Raser'ı kullanmaya devam edebilmek için güncelleme yapılması zorunludur. Güncelleme tamamlanana kadar uygulama kilitlidir.
+          ${t.desc}
         </p>
 
         <div style="
@@ -107,13 +145,13 @@
           color: #9aa0a6;
           line-height: 1.4;
         ">
-          <strong style="color: #e2e2e6; display: block; margin-bottom: 4px;">Yenilikler:</strong>
-          ${updateInfo.notes}
+          <strong style="color: #e2e2e6; display: block; margin-bottom: 4px;">${t.notesHeader}</strong>
+          ${updateInfo.notes || t.defaultNotes}
         </div>
 
         <div id="updater-progress-container" style="display: none; width: 100%; flex-direction: column; gap: 8px;">
           <div style="display: flex; justify-content: space-between; font-size: 13px; color: #a8c7fa;">
-            <span id="updater-progress-label">İndiriliyor...</span>
+            <span id="updater-progress-label">${t.downloading}</span>
             <span id="updater-progress-percent">0%</span>
           </div>
           <div style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 9999px; overflow: hidden;">
@@ -138,14 +176,13 @@
           gap: 8px;
           margin-top: 6px;
         ">
-          Şimdi Güncelle ve Yeniden Başlat
+          ${t.btnUpdate}
         </button>
       </div>
     `;
 
     document.body.appendChild(modal);
 
-    // Trap user: disable ESC or shortcuts while mandatory update is pending
     window.addEventListener('keydown', (e) => {
       e.stopImmediatePropagation();
     }, true);
@@ -162,7 +199,6 @@
       btnUpdate.style.cursor = 'not-allowed';
       progressBox.style.display = 'flex';
 
-      // Listen to Rust download progress events
       if (window.__TAURI__ && window.__TAURI__.event) {
         try {
           window.__TAURI__.event.listen('update-download-progress', (e) => {
@@ -171,7 +207,7 @@
               progressBar.style.width = `${data.percent}%`;
               progressPercent.textContent = `${data.percent}%`;
               if (data.percent >= 100) {
-                progressLabel.textContent = 'Kuruluyor ve yeniden başlatılıyor...';
+                progressLabel.textContent = t.installing;
               }
             }
           });
@@ -181,7 +217,7 @@
       try {
         await invoke('install_update', { downloadUrl: updateInfo.download_url });
       } catch (err) {
-        progressLabel.textContent = 'İndirme hatası: ' + err;
+        progressLabel.textContent = t.downloadError + err;
         progressLabel.style.color = '#ff5449';
         btnUpdate.disabled = false;
         btnUpdate.style.opacity = '1';
