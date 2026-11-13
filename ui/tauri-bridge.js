@@ -65,6 +65,31 @@
     getZoomFactor: () => 1.0,
     discordRpcUpdate: (track) => invoke('discord_rpc_update', { track }),
     discordRpcClear: () => invoke('discord_rpc_clear'),
+    pickLocalFiles: async () => {
+      const tracks = await invoke('pick_local_files');
+      if (Array.isArray(tracks)) {
+        return tracks.map(t => {
+          if (t.path && window.__TAURI__ && window.__TAURI__.core && typeof window.__TAURI__.core.convertFileSrc === 'function') {
+            try { t.url = window.__TAURI__.core.convertFileSrc(t.path); } catch (_) {}
+          }
+          return t;
+        });
+      }
+      return tracks || [];
+    },
+    pickLocalFolder: async () => {
+      const tracks = await invoke('pick_local_folder');
+      if (Array.isArray(tracks)) {
+        return tracks.map(t => {
+          if (t.path && window.__TAURI__ && window.__TAURI__.core && typeof window.__TAURI__.core.convertFileSrc === 'function') {
+            try { t.url = window.__TAURI__.core.convertFileSrc(t.path); } catch (_) {}
+          }
+          return t;
+        });
+      }
+      return tracks || [];
+    },
+    rescanLocalMetadata: async () => [],
     getCacheSize: async () => 0,
     clearCache: async () => {}
   });

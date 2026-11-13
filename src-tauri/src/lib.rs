@@ -1,4 +1,5 @@
 mod discord;
+mod local_files;
 mod updater;
 
 use tauri::{
@@ -73,6 +74,16 @@ async fn install_update(app: tauri::AppHandle, download_url: String) -> Result<(
     updater::download_and_install_update(app, download_url).await
 }
 
+#[tauri::command]
+fn pick_local_files() -> Vec<local_files::LocalTrack> {
+    local_files::pick_files()
+}
+
+#[tauri::command]
+fn pick_local_folder() -> Vec<local_files::LocalTrack> {
+    local_files::pick_folder()
+}
+
 fn is_tr_locale() -> bool {
     #[cfg(target_os = "windows")]
     unsafe {
@@ -127,7 +138,9 @@ pub fn run() {
             discord_rpc_update,
             discord_rpc_clear,
             check_update,
-            install_update
+            install_update,
+            pick_local_files,
+            pick_local_folder
         ])
         .setup(|app| {
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaPlayPause));
