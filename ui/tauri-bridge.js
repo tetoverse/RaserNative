@@ -90,8 +90,26 @@
       return tracks || [];
     },
     rescanLocalMetadata: async () => [],
+    updateTaskbarState: (playing) => invoke('taskbar_playback_state', { playing: !!playing }),
+    setThumbarButtons: () => {},
     getCacheSize: async () => 0,
     clearCache: async () => {}
+  });
+
+  // Automatically sync playback state with Windows Taskbar Thumbnail Toolbar (Play/Pause button icon)
+  document.addEventListener('DOMContentLoaded', () => {
+    const attachAudioListeners = () => {
+      const audio = document.getElementById('native-audio') || document.querySelector('audio');
+      if (audio && !audio.__taskbarAttached) {
+        audio.__taskbarAttached = true;
+        audio.addEventListener('play', () => invoke('taskbar_playback_state', { playing: true }));
+        audio.addEventListener('playing', () => invoke('taskbar_playback_state', { playing: true }));
+        audio.addEventListener('pause', () => invoke('taskbar_playback_state', { playing: false }));
+        audio.addEventListener('ended', () => invoke('taskbar_playback_state', { playing: false }));
+      }
+    };
+    attachAudioListeners();
+    setTimeout(attachAudioListeners, 1000);
   });
 
   // Enable seamless dragging for frameless Material You titlebar

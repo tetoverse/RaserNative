@@ -1,5 +1,6 @@
 mod discord;
 mod local_files;
+mod taskbar;
 mod updater;
 
 use tauri::{
@@ -84,6 +85,12 @@ fn pick_local_folder() -> Vec<local_files::LocalTrack> {
     local_files::pick_folder()
 }
 
+#[tauri::command]
+fn taskbar_playback_state(playing: bool) {
+    let is_tr = is_tr_locale();
+    taskbar::win::update_playback_state(playing, is_tr);
+}
+
 fn is_tr_locale() -> bool {
     #[cfg(target_os = "windows")]
     unsafe {
@@ -140,7 +147,8 @@ pub fn run() {
             check_update,
             install_update,
             pick_local_files,
-            pick_local_folder
+            pick_local_folder,
+            taskbar_playback_state
         ])
         .setup(|app| {
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaPlayPause));
@@ -150,6 +158,7 @@ pub fn run() {
 
             // Setup System Tray
             let is_tr = is_tr_locale();
+            taskbar::win::setup_taskbar_buttons(app.handle(), is_tr);
             let show_text = if is_tr { "Raser'ı Göster" } else { "Show Raser" };
             let toggle_text = if is_tr { "Oynat / Durdur" } else { "Play / Pause" };
             let next_text = if is_tr { "Sonraki Şarkı" } else { "Next Track" };
