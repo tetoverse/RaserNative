@@ -63,8 +63,8 @@
     },
     setZoomFactor: () => {},
     getZoomFactor: () => 1.0,
-    discordRpcUpdate: () => {},
-    discordRpcClear: () => {},
+    discordRpcUpdate: (track) => invoke('discord_rpc_update', { track }),
+    discordRpcClear: () => invoke('discord_rpc_clear'),
     getCacheSize: async () => 0,
     clearCache: async () => {}
   });

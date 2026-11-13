@@ -1,4 +1,10 @@
-use tauri::{Emitter, Manager};
+mod discord;
+
+use tauri::{
+    menu::{Menu, MenuItem},
+    tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
+    Emitter, Manager,
+};
 use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Shortcut, ShortcutState};
 
 #[tauri::command]
@@ -19,7 +25,13 @@ fn toggle_maximize_window(window: tauri::Window) {
 
 #[tauri::command]
 fn close_window(window: tauri::Window) {
-    let _ = window.close();
+    // Hide to system tray instead of closing process so playback continues
+    let _ = window.hide();
+}
+
+#[tauri::command]
+fn exit_app() {
+    std::process::exit(0);
 }
 
 #[tauri::command]
@@ -38,6 +50,16 @@ fn open_external(url: String) {
     {
         let _ = std::process::Command::new("xdg-open").arg(&url).spawn();
     }
+}
+
+#[tauri::command]
+fn discord_rpc_update(track: discord::DiscordTrackInfo) {
+    discord::update_presence(track);
+}
+
+#[tauri::command]
+fn discord_rpc_clear() {
+    discord::clear_presence();
 }
 
 fn send_media_command(app: &tauri::AppHandle, cmd: &str) {
@@ -71,13 +93,78 @@ pub fn run() {
             minimize_window,
             toggle_maximize_window,
             close_window,
-            open_external
+            exit_app,
+            open_external,
+            discord_rpc_update,
+            discord_rpc_clear
         ])
         .setup(|app| {
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaPlayPause));
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaTrackNext));
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaTrackPrevious));
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaStop));
+
+            // Setup System Tray
+            let show_i = MenuItem::with_id(app, "show", "Raser'ı Göster", true, None::<&str>)?;
+            let toggle_i = MenuItem::with_id(app, "toggle_play", "Oynat / Durdur", true, None::<&str>)?;
+            let next_i = MenuItem::with_id(app, "next_track", "Sonraki Şarkı", true, None::<&str>)?;
+            let prev_i = MenuItem::with_id(app, "prev_track", "Önceki Şarkı", true, None::<&str>)?;
+            let quit_i = MenuItem::with_id(app, "quit", "Çıkış", true, None::<&str>)?;
+
+            let tray_menu = Menu::with_items(app, &[
+                &show_i,
+                &toggle_i,
+                &next_i,
+                &prev_i,
+                &quit_i,
+            ])?;
+
+            let mut tray_builder = TrayIconBuilder::new()
+                .menu(&tray_menu)
+                .tooltip("Raser")
+                .on_menu_event(|app, event| {
+                    match event.id.as_ref() {
+                        "show" => {
+                            if let Some(w) = app.get_webview_window("main") {
+                                let _ = w.show();
+                                let _ = w.unminimize();
+                                let _ = w.set_focus();
+                            }
+                        }
+                        "toggle_play" => send_media_command(app, "toggle"),
+                        "next_track" => send_media_command(app, "next"),
+                        "prev_track" => send_media_command(app, "prev"),
+                        "quit" => {
+                            std::process::exit(0);
+                        }
+                        _ => {}
+                    }
+                })
+                .on_tray_icon_event(|tray, event| {
+                    if let TrayIconEvent::Click {
+                        button: MouseButton::Left,
+                        button_state: MouseButtonState::Up,
+                        ..
+                    } = event
+                    {
+                        let app = tray.app_handle();
+                        if let Some(w) = app.get_webview_window("main") {
+                            if w.is_visible().unwrap_or(false) {
+                                let _ = w.hide();
+                            } else {
+                                let _ = w.show();
+                                let _ = w.unminimize();
+                                let _ = w.set_focus();
+                            }
+                        }
+                    }
+                });
+
+            if let Some(icon) = app.default_window_icon() {
+                tray_builder = tray_builder.icon(icon.clone());
+            }
+
+            let _ = tray_builder.build(app)?;
 
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.show();
