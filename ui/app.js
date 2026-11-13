@@ -13,6 +13,14 @@ function getApiBaseUrl(port) {
   return 'https://app.raserapp.online';
 }
 
+function ensureAbsoluteStreamUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  if (url.startsWith('/')) {
+    return `${getApiBaseUrl()}${url}`;
+  }
+  return url;
+}
+
 (function initRiffDiskStorageDaemon() {
 if (typeof window === 'undefined' || !window.electronAPI || typeof window.electronAPI.storageInitSync !== 'function') return;
 const origGet = Storage.prototype.getItem;
@@ -4602,6 +4610,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const res = await fetch(fetchUrl);
           const data = await res.json();
           if (data && data.success && data.streamUrl) {
+            data.streamUrl = ensureAbsoluteStreamUrl(data.streamUrl);
             nextTrack._preloadedStreamUrl = data.streamUrl;
             if (data.resolvedId) nextTrack.resolvedId = data.resolvedId;
             nextTrack._preloadedStreamQuality = localStorage.getItem('riff_audio_quality') || 'medium';
@@ -4875,6 +4884,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         throw new Error((data && data.error) || 'Failed to extract audio stream');
       }
+
+      data.streamUrl = ensureAbsoluteStreamUrl(data.streamUrl);
 
       if (data.resolvedId) {
         track.resolvedId = data.resolvedId;
@@ -8497,6 +8508,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const d = await r.json();
           if (myToken !== state.loadToken) return;
           if (d && d.success && d.streamUrl) {
+            d.streamUrl = ensureAbsoluteStreamUrl(d.streamUrl);
             cur._preloadedStreamUrl = d.streamUrl;
             if (hlsInstance) {
               try { hlsInstance.destroy(); } catch (_) {}
@@ -14826,18 +14838,17 @@ function bindCoverHoldZoom(wrapEl) {
 
   function updateEngineWidthVar() {
     const container = document.querySelector('.platform-switch-container');
-    if (!container) return;
+    const accountPill = document.querySelector('.user-account-container');
+    const accountW = (accountPill && accountPill.offsetWidth) ? (accountPill.offsetWidth + 12) : 130;
     const isHidden = document.body.classList.contains('hide-engine-btns');
     if (isHidden) {
-      document.documentElement.style.setProperty('--engine-w', '0px');
+      document.documentElement.style.setProperty('--engine-w', `${accountW}px`);
       document.documentElement.style.setProperty('--engine-gap', '0px');
     } else {
-      const isCompact = document.body.classList.contains('compact-engine-btns');
-      const w = isCompact ? 124 : (container.offsetWidth || 435);
-      if (w > 0) {
-        document.documentElement.style.setProperty('--engine-w', `${w}px`);
-        document.documentElement.style.setProperty('--engine-gap', '16px');
-      }
+      const containerW = (container && container.offsetWidth) ? container.offsetWidth : 118;
+      const totalW = containerW + accountW;
+      document.documentElement.style.setProperty('--engine-w', `${totalW}px`);
+      document.documentElement.style.setProperty('--engine-gap', '16px');
     }
   }
 

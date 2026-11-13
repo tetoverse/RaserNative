@@ -7,11 +7,11 @@
 @property --md-sys-color-surface-container { syntax: '<color>'; inherits: true; initial-value: #1E1F22; }
 @property --banner-fade-end { syntax: '<percentage>'; inherits: true; initial-value: 100%; }
 @property --banner-fade-base { syntax: '<percentage>'; inherits: true; initial-value: 100%; }
-@property --engine-w { syntax: '<length>'; inherits: true; initial-value: 435px; }
+@property --engine-w { syntax: '<length>'; inherits: true; initial-value: 260px; }
 @property --engine-gap { syntax: '<length>'; inherits: true; initial-value: 16px; }
 
 :root {
-  --engine-w: 435px;
+  --engine-w: 260px;
   --engine-gap: 16px;
   --font-scale: 1.1875;
   --banner-blur: 3px;
@@ -324,7 +324,7 @@ body.perf .titlebar { transition: none !important; }
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-  width: min(560px, max(200px, calc(100% - (var(--engine-w, 435px) + 36px) * 2)));
+  width: min(560px, max(200px, calc(100% - (var(--engine-w, 260px) + 36px) * 2)));
   max-width: 560px;
   margin: 0;
   z-index: 2;
@@ -338,19 +338,19 @@ body.perf .titlebar { transition: none !important; }
 .top-nav:not(.search-pos-left):not(.search-pos-right) .search-box-wrapper {
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-  width: min(560px, max(200px, calc(100% - (var(--engine-w, 435px) + 36px) * 2)));
+  width: min(560px, max(200px, calc(100% - (var(--engine-w, 260px) + 36px) * 2)));
 }
 
 .top-nav.search-pos-left .search-box-wrapper {
   left: 24px;
   transform: translateY(-50%) translateX(0);
-  width: min(560px, calc(100% - 48px - var(--engine-w, 435px) - var(--engine-gap, 16px)));
+  width: min(560px, calc(100% - 48px - var(--engine-w, 260px) - var(--engine-gap, 16px)));
 }
 
 .top-nav.search-pos-right .search-box-wrapper {
-  left: calc(100% - 24px - var(--engine-w, 435px) - var(--engine-gap, 16px));
+  left: calc(100% - 24px - var(--engine-w, 260px) - var(--engine-gap, 16px));
   transform: translateY(-50%) translateX(-100%);
-  width: min(560px, calc(100% - 48px - var(--engine-w, 435px) - var(--engine-gap, 16px)));
+  width: min(560px, calc(100% - 48px - var(--engine-w, 260px) - var(--engine-gap, 16px)));
 }
 
 .platform-switch-container {
@@ -447,22 +447,23 @@ body.perf .titlebar { transition: none !important; }
   background: transparent;
   border: none;
   color: var(--md-sys-color-on-surface-variant);
-  padding: 6px 16px;
+  padding: 8px 12px;
   border-radius: var(--md-shape-corner-full);
   font-size: calc(12px * var(--font-scale, 1));
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 0;
   cursor: pointer;
   white-space: nowrap;
-  transition: padding 0.3s cubic-bezier(0.2, 0, 0, 1),
-              gap 0.3s cubic-bezier(0.2, 0, 0, 1),
-              background var(--transition-fast),
-              color var(--transition-fast);
+  transition: background var(--transition-fast),
+              color var(--transition-fast),
+              transform var(--transition-fast);
 }
 .platform-btn:hover {
   color: var(--md-sys-color-on-surface);
+  transform: scale(1.06);
 }
 .platform-btn.active {
   background: var(--md-sys-color-secondary-container);
@@ -471,14 +472,13 @@ body.perf .titlebar { transition: none !important; }
 }
 
 .platform-btn span {
-  display: inline-block;
-  max-width: 140px;
-  opacity: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  vertical-align: middle;
-  transition: max-width 0.3s cubic-bezier(0.2, 0, 0, 1),
-              opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
+  display: none !important;
+}
+
+.platform-btn svg {
+  width: 17px;
+  height: 17px;
+  display: block;
 }
 
 body.compact-engine-btns {
