@@ -10,6 +10,27 @@
     return Promise.resolve();
   };
 
+  const mediaCommandListeners = [];
+
+  function handleMediaDispatch(cmd) {
+    if (!cmd) return;
+    mediaCommandListeners.forEach(fn => {
+      try { fn(cmd); } catch (_) {}
+    });
+  }
+
+  window.__raserMediaCommand = handleMediaDispatch;
+
+  const setupTauriEventListener = () => {
+    if (window.__TAURI__ && window.__TAURI__.event && typeof window.__TAURI__.event.listen === 'function') {
+      window.__TAURI__.event.listen('media-command', (e) => {
+        handleMediaDispatch(e.payload);
+      });
+    }
+  };
+  setupTauriEventListener();
+  window.addEventListener('DOMContentLoaded', setupTauriEventListener);
+
   // Wire up window controls and system features for Tauri
   window.electronAPI = Object.assign(window.electronAPI || {}, {
     isWindows: true,
@@ -18,6 +39,11 @@
     minimizeWindow: () => invoke('minimize_window'),
     maximizeWindow: () => invoke('toggle_maximize_window'),
     closeWindow: () => invoke('close_window'),
+    onMediaCommand: (cb) => {
+      if (typeof cb === 'function') mediaCommandListeners.push(cb);
+    },
+    setMediaKeys: () => {},
+    mediaKeysActive: () => {},
     openExternal: (url) => {
       try {
         invoke('open_external', { url });
