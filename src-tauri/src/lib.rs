@@ -1,4 +1,5 @@
 mod discord;
+mod updater;
 
 use tauri::{
     menu::{Menu, MenuItem},
@@ -62,6 +63,16 @@ fn discord_rpc_clear() {
     discord::clear_presence();
 }
 
+#[tauri::command]
+async fn check_update() -> Result<updater::UpdateInfo, String> {
+    updater::check_for_update().await
+}
+
+#[tauri::command]
+async fn install_update(app: tauri::AppHandle, download_url: String) -> Result<(), String> {
+    updater::download_and_install_update(app, download_url).await
+}
+
 fn send_media_command(app: &tauri::AppHandle, cmd: &str) {
     let _ = app.emit("media-command", cmd);
     if let Some(window) = app.get_webview_window("main") {
@@ -96,7 +107,9 @@ pub fn run() {
             exit_app,
             open_external,
             discord_rpc_update,
-            discord_rpc_clear
+            discord_rpc_clear,
+            check_update,
+            install_update
         ])
         .setup(|app| {
             let _ = app.global_shortcut().register(Shortcut::new(None, Code::MediaPlayPause));
