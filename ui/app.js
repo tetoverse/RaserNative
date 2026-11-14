@@ -2329,7 +2329,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                           btnRefreshVibe: document.getElementById('btn-refresh-vibe')
   };
-  if (el.nativeAudio) el.nativeAudio.preload = 'auto';
+  if (el.nativeAudio) {
+    el.nativeAudio.preload = 'auto';
+    el.nativeAudio.crossOrigin = 'anonymous';
+  }
 
 
   var TRANSLATION_LANGUAGES = [
@@ -4918,7 +4921,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         el.nativeAudio.src = data.streamUrl;
         playSmooth();
-        bufferTrackToBlob(track, data.streamUrl).catch(() => {});
+        setTimeout(() => {
+          if (state.isPlaying && state.currentTrack === track) {
+            bufferTrackToBlob(track, data.streamUrl).catch(() => {});
+          }
+        }, 4000);
       }
 
       applyAudioSettings();
